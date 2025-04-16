@@ -14,9 +14,9 @@ Bile in my throat and on my lips<br>
 </em></p>
 <p align="center" style="width:25%; margin:auto;">— an anonymous author on the perils of running the 4 x mile relay</p>
 <br>
-Train slow to race fast. It may seem counterintuitive, but many elite runners perform about 80% of their training in Zone 2 — lower-intensity aerobic exercise done at 60–70% of their maximum heart rate. Zone 2 training is also known to increase cardiovascular health and lower your resting heart rate.
+Train slow to race fast. It may seem counterintuitive, but many elite runners perform about 80% of their training in Zone 2 — lower-intensity aerobic exercise done at 60–70% of their maximum heart rate. Zone 2 training is also known to increase cardiovascular health and lower one's resting heart rate.
 
-As a runner, finding out what factors affect my heartrate during my runs is of much interest to me. Being able to predict what type of runs keep me in Zone 2 can help shape my future training. When using heartrate as a measure of intensity, this would mean staying between 120 to 140 bpm. Thus, I analyzed a datset of my own running data containing around 300 running activites recorded between 2022 and 2025 using Strava, a popular app used for tracking physical exercise. I obtained the data as a dataframe with all of my uploaded activities, not just the running activities, using the Strava API.
+As a runner, finding out what factors affect heartrate during runs is of much interest to me. Being able to predict what type of runs keep me in Zone 2 can help shape my future training. For me, Zone 2 training would correspond to a heartrate of 120 to 140 bpm. Thus, I analyzed a datset of my own running data containing around 300 running activites recorded between 2022 and 2025 using Strava, a popular app for tracking physical exercise. I obtained the data as a dataframe with all of my uploaded activities, not just the running activities, using the Strava API.
 
 Each activity had the following columns:
 
@@ -107,7 +107,7 @@ height="425"
 frameborder="0"
 ></iframe>
 
-By visualizing the distribution of heartrates, I gained a clearer understanding of the intensity of my runs. The graph shows that over 50% of my runs fall within the 150 to 170 bpm range, which is significantly higher than my target zone 2 of 120 to 140 bpm.
+By visualizing the distribution of heartrates, I gained a clearer understanding of the intensity of my runs. The graph shows that over 50% of my runs fall within the 150 to 170 bpm range, which is significantly higher than my target Zone 2 of 120 to 140 bpm.
 
 <iframe
 src="assets/distance-pace.html"
@@ -157,7 +157,7 @@ Another interesting factor to consider is the time of day that I run. Nearly 40%
 | 8:00 PM             |                   7.83226 |           166     |
 | 11:00 PM            |                   8.90811 |           148.5   |
 
-Surprisingly, runs started between 3:00 and 5:00 PM have the lowest average heartrates, despite being not only my most frequent start time but also when I run the fastest. This suggests that my body performs best during this time window. It makes sense—since I consistently run in the late afternoon, my body has likely adapted to expect and optimize for physical activity at that time.
+Surprisingly, runs started between 3:00 and 5:00 PM have the lowest average heartrates, despite being not only my most frequent start time but also when I run the fastest. This suggests that my body performs best during this time window. As I consistently run in the late afternoon, my body has likely adapted to expect and optimize for physical activity at that time.
 
 Another possibility is that I was in my best running shape during high school, and many of my afternoon runs come from that time period. If that’s the case, the lower heartrates and faster paces might reflect my peak fitness level rather than the time of day itself.
 
@@ -167,13 +167,13 @@ Another possibility is that I was in my best running shape during high school, a
 With the goal of keeping my future runs in Zone 2, I will predict my average heartrate during a run using start time, distance, elevation gain, and pace. This regression problem uses heartrate as the target variable because it is the most closely related metric to cardiovascular capability and aerobic fitness. At the time of prediction, I will have already decided what distance and pace to run at. I also will have a route and start time, so all four of my input variables will be known.
 
 ### Loss Function
-I will use Mean Squared Error (MSE) to evaluate model performance, which is the squared difference between actual and predict values. MSE has the following characteristics:
+The data collected will be split into training and test sets with and 80:20 split. I will use the  Mean Squared Error (MSE) of the test set to evaluate model performance, which is the squared difference between actual and predicted values. MSE has the following characteristics:
 
 - High penalties for large errors, making it robust to outliers
 
 - Efficient model training due to differentiability
 
-- Standard for linear regression problems and widely used
+- Standard for linear regression problems and commonly used
 
 
 ---
@@ -182,7 +182,7 @@ I will use Mean Squared Error (MSE) to evaluate model performance, which is the 
 To predict `Heartrate`, I will use a linear regression baseline model with only `Distance` and `Elevation Gain` as input features in `sklearn`. Higher distance and elevation gain should both be correlated with higher heartrate, as they both represent a large change in overall position. Heartrate, distance, and elevation gain are all numerical features, and they will make a good starting point for improving my final model. The model will have no hyperparameter tuning or feature engineering.
 
 ### Results and Analysis
-The resulting MSE was 210.455. For a 5 mile run with 200 ft of elevation gain, the predicted heartrate comes out to be 159 bpm, which seems a bit low, as the median heartrate of my past runs between 4 and 6 miles is 164 bpm. This performance is not too good, but it should improve as more features are added and hyperparameters are tuned
+The resulting MSE of the test set was 260.467. For a 5 mile run with 200 ft of elevation gain, the predicted heartrate comes out to be 159 bpm, which seems a bit low, as the median heartrate of my past runs between 4 and 6 miles is 164 bpm. This performance is not too good, but it should improve as more features are added and the hyperparameters are tuned.
 
 <iframe
 src="assets/baseline.html"
@@ -216,7 +216,7 @@ Pace Polynomial Degree - 2
 Ridge Regularization Penalty - 10
 
 ### Results and Analysis
-The final model achieved a significantly improved MSE of 132.010. For example, it predicted a heart rate of 167.057 bpm for a 5 mile run at a 7:30 pace, with 200 ft of elevation gain, started at 3:00 PM — a result that aligns more closely with expectations. This improvement can be attributed to several factors. Most notably, the inclusion of additional features like pace and start time helped the model distinguish between runs that may have similar distances and elevation gains but differ in intensity and context. Furthermore, the use of ridge regularization helped prevent any single feature from dominating the predictions by shrinking excessively large coefficients. Together, these enhancements contributed to a more robust and accurate model.
+The final model achieved a significantly improved MSE of 167.468. For example, it predicted a heart rate of 166 bpm for a 5 mile run at a 7:30 pace, with 200 ft of elevation gain, started at 3:00 PM — a result that aligns more closely with expectations. This improvement can be attributed to several factors. Most notably, the inclusion of additional features like pace and start time helped the model distinguish between runs that may have similar distances and elevation gains but differ in intensity and context. Furthermore, the use of ridge regularization helped prevent any single feature from dominating the predictions by shrinking excessively large coefficients. Together, these enhancements contributed to a more robust and accurate model.
 
 <iframe
 src="assets/final.html"
