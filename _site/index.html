@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/assets/css/style.css?v=fffcfdb5740ac4d2f44ffeda524be8ac0bd37c2e" media="screen" type="text/css">
+    <link rel="stylesheet" href="/assets/css/print.css" media="print" type="text/css">
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>How hard do I run? | running-heartrate-analysis</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="How hard do I run?" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="running-heartrate-analysis" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="How hard do I run?" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","headline":"How hard do I run?","name":"running-heartrate-analysis","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <a href="http://localhost:4000/">
+          <h1>running-heartrate-analysis</h1>
+        </a>
+        <h2></h2>
+        
+          <a href="https://github.com/jding490/running-heartrate-analysis" class="button"><small>View project on</small> GitHub</a>
+        
+        
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1 id="how-hard-do-i-run">How hard do I run?</h1>
+<hr />
+<h2 id="introduction">Introduction</h2>
+
+<p>Jonathan Ding - <a href="mailto:jonathd@umich.edu">jonathd@umich.edu</a></p>
+
+<p>I analyzed a datset of my own running data of around 300 running activites recorded between 2022 and 2025 using Strava, a popular app used for tracking physical exercise. I obtained the data as a dataframe with all of my uploaded activities, not just the running activities, using the Strava API.</p>
+
+<p>The main question that interested me is how certain factors affect my heartrate during an activity. The factors that I decided to look at where time of activity, distance, pace, and elevation gain. It is generally well-accepted that the higher one’s heart rate is during an activity, the more strenuous it is. Certain types of training such as lower intensity, “zone 2” aerobic runs where your heart rate is at 60-70% of its max are known to increase cardiovascular health and lower your overall heart rate. Thus, being able to predict what type of runs place my heartrate at zone 2 can help shape my future training.</p>
+
+<p>Each activity had the following columns:</p>
+
+<p><code class="language-plaintext highlighter-rouge">id</code> - a unique identifier for each activity</p>
+
+<p><code class="language-plaintext highlighter-rouge">name</code> - the name of the activity</p>
+
+<p><code class="language-plaintext highlighter-rouge">start_date_local</code> - the local time at which I began recording the activity</p>
+
+<p><code class="language-plaintext highlighter-rouge">type</code> - sport type (run, bike, ski, etc.)</p>
+
+<p><code class="language-plaintext highlighter-rouge">distance</code> - the distance travelled</p>
+
+<p><code class="language-plaintext highlighter-rouge">average_heartrate</code> - the average heartrate in beats per minute for the activity</p>
+
+<p><code class="language-plaintext highlighter-rouge">moving_time</code> - the time spent moving during the activity (not including time paused)</p>
+
+<p><code class="language-plaintext highlighter-rouge">elapsed_time</code> - the total time from start to end (including time paused)</p>
+
+<p><code class="language-plaintext highlighter-rouge">total_elevation_gain</code> - the total elevation gain in meters</p>
+
+<p><code class="language-plaintext highlighter-rouge">average_speed</code> - the average speed in meters per second</p>
+
+<p><code class="language-plaintext highlighter-rouge">max_speed</code> - the max speed in meters per second</p>
+
+<p><code class="language-plaintext highlighter-rouge">external_id</code> - an external identifier for the activty</p>
+
+<hr />
+<h2 id="data-cleaning-and-exploratory-data-analysis">Data Cleaning and Exploratory Data Analysis</h2>
+
+<h3 id="data-cleaning">Data Cleaning</h3>
+
+<p>To narrow our scope of analysis and remove the irrelevant data, I decided to drop the following rows:</p>
+
+<ul>
+  <li>
+    <p>Non-running activities</p>
+  </li>
+  <li>
+    <p>Activities shorter than 100 seconds</p>
+  </li>
+  <li>
+    <p>Activities with an empty <code class="language-plaintext highlighter-rouge">average_heartrate</code> value</p>
+  </li>
+</ul>
+
+<p>In addition, the following columns were dropped:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">name</code> for irrelevance</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">type</code> as only running activities were kept</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">moving_time</code> introduces multicollinearity</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">elapsed_time</code> introduces multicollinearity</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">max_speed</code> to narrow the scope</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">external_id</code> not needed as <code class="language-plaintext highlighter-rouge">id</code> provides an unique identifier</p>
+  </li>
+</ul>
+
+<p>The columns <code class="language-plaintext highlighter-rouge">moving_time</code> and <code class="language-plaintext highlighter-rouge">elapsed_time</code> were dropped because they introduce multicollinearity into the dataset. Both are directly derived from <code class="language-plaintext highlighter-rouge">average_speed</code> and <code class="language-plaintext highlighter-rouge">distance</code> — since time can be calculated as distance multiplied by speed, including them would add redundant information which can negatively impact regression models.</p>
+
+<p>Last, the columns that were kept were converted to more useful formats/units:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">start_date_local</code> changed to the start hour</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">distance</code> converted to miles</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">average_heartrate</code> left unchanged</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">total_elevation_gain</code> converted to feet</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">average_speed</code> converted to miles per hour</p>
+  </li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right">id</th>
+      <th style="text-align: right">Start Time (hour)</th>
+      <th style="text-align: right">Distance (miles)</th>
+      <th style="text-align: right">Heartrate (bpm)</th>
+      <th style="text-align: right">Elevation Gain (ft)</th>
+      <th style="text-align: right">Pace (minutes per mile)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">13352430485</td>
+      <td style="text-align: right">8:00 AM</td>
+      <td style="text-align: right">1.51603</td>
+      <td style="text-align: right">125.5</td>
+      <td style="text-align: right">50.5249</td>
+      <td style="text-align: right">8.63009</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">13352429271</td>
+      <td style="text-align: right">8:00 AM</td>
+      <td style="text-align: right">0.502815</td>
+      <td style="text-align: right">103.7</td>
+      <td style="text-align: right">22.6378</td>
+      <td style="text-align: right">7.55772</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">12387785837</td>
+      <td style="text-align: right">6:00 PM</td>
+      <td style="text-align: right">2.399</td>
+      <td style="text-align: right">136.6</td>
+      <td style="text-align: right">58.727</td>
+      <td style="text-align: right">13.1353</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">12284049027</td>
+      <td style="text-align: right">4:00 PM</td>
+      <td style="text-align: right">4.01133</td>
+      <td style="text-align: right">179.5</td>
+      <td style="text-align: right">240.486</td>
+      <td style="text-align: right">8.79133</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">11898056025</td>
+      <td style="text-align: right">8:00 PM</td>
+      <td style="text-align: right">6.00973</td>
+      <td style="text-align: right">182.2</td>
+      <td style="text-align: right">127.297</td>
+      <td style="text-align: right">8.3846</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="decision-to-not-impute">Decision to not impute</h3>
+
+<p>The decision to drop columns with an empty <code class="language-plaintext highlighter-rouge">average_heartrate</code> value rather than impute values was due to the fact that heartrate was the variable I was trying to predict. Imputing missing values with the mean or a randomly chosen value would introduce bias into the model, especially since these values would not reflect the true physiological effort of the runner and could risk misleading the model with articifially generated information.</p>
+
+<hr />
+<h2 id="framing-a-prediction-problem">Framing a Prediction Problem</h2>
+<hr />
+<h2 id="baseline-model">Baseline Model</h2>
+<hr />
+<h2 id="final-model">Final Model</h2>
+
+        </section>
+
+        <aside id="sidebar">
+          
+
+          
+            <p class="repo-owner"><a href="https://github.com/jding490/running-heartrate-analysis">running-heartrate-analysis</a> is maintained by <a href="https://github.com/jding490">jding490</a>.</p>
+          
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  </body>
+</html>
