@@ -107,7 +107,7 @@ height="425"
 frameborder="0"
 ></iframe>
 
-By visualizing the distribution of heartrates, I gained a clearer understanding of the intensity of my runs. The graph shows that over 50% of my runs fall within the 150 to 170 bpm range, which is significantly higher than my target Zone 2 of 120 to 140 bpm.
+By visualizing the distribution of heartrates, I gained an understanding of how my current training compares to my target training. The graph shows that over 50% of my runs fall within the 150 to 170 bpm range, which is significantly higher than my target Zone 2 of 120 to 140 bpm.
 
 <iframe
 src="assets/distance-pace.html"
